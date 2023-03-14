@@ -1,4 +1,4 @@
-.grille {
+.grid {
     display: flex;
     flex-wrap: wrap;
     border: 1px solid #000;
@@ -25,28 +25,32 @@ h3 {
     margin: 20px 0;
 }
 
-.grille div {
+.grid div {
     width: 25px;
     height: 25px;
 }
 
-.tireur {
+.spaceship {
     background: url(ressources/vaisseau.png);
     transform: rotate(180deg);
     background-position: center;
     background-size: contain;
 }
 
-.alien {
+.invader {
     background: url(ressources/ennemies.png);
     background-position: center;
     background-size: contain;
 }
 
-.boom {
-    background-color: red;
+.laser {
+    background: url(ressources/laser.png);
+    background-position: center;
+    background-size: contain;
 }
 
-.laser {
-    background-color: orange;
+.explosion {
+    background: url(ressources/explosion.png);
+    background-position: center;
+    background-size: contain;
 }
