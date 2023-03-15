@@ -6,17 +6,7 @@ const invaderDefault = [
     64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75
 ];
 
-const playerDefault = 170;
-
-const leftBorder = [
-    0, 20, 40, 60, 80, 100, 120, 140, 160, 180
-];
-
-const rightBorder = [
-    19, 39, 59, 79, 99, 119, 139, 159, 179, 199
-];
-
-
+const playerDefault = 370;
 
 let invaderPosition = [
     24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
@@ -24,26 +14,57 @@ let invaderPosition = [
     64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75
 ];
 
-let playerPosition = 170;
+let playerPosition = playerDefault;
 
 let invaderSpeed = 500;
 
-let gridSize = 200;
+let gridSize = 400;
+
+let borderSeparation = 20;
 
 let jumpLine = 20;
 
+let cooldownShoot = 400;
+
+let game = true;
+
+let direction = 1
+
+let reverse = false;
+
+let lastClick = 0;
+
 // Generate grid using number of squares needed
 function gridGen(e) {
-    for (let i = 0; i < e; i++) {
-        grid.appendChild(document.createElement('div'));
+    let nextLeftBorder = borderSeparation;
+    let nextRightBorder = borderSeparation - 1;
+
+
+    div = document.createElement('div');
+    div.setAttribute("data-left", "true")
+    grid.appendChild(div)
+
+    for (let i = 1; i < e; i++) {
+        if (i == nextLeftBorder) {
+            div = document.createElement('div');
+            div.setAttribute("data-left", "true")
+            nextLeftBorder += borderSeparation
+            grid.appendChild(div)
+        } else if (i == nextRightBorder) {
+            div = document.createElement('div');
+            div.setAttribute("data-right", "true")
+            nextRightBorder += borderSeparation
+            grid.appendChild(div)
+        } else {
+            grid.appendChild(document.createElement('div'));
+        }
     }
 }
-
 
 gridGen(gridSize);
 
 // Get all squares in the grid into array
-gamezone = Array.from(document.querySelectorAll('.grid div'));
+gamezone = document.querySelectorAll('.grid div');
 
 // Spawn player and ennemies
 function spawnEntities() {
@@ -55,19 +76,6 @@ function spawnEntities() {
 spawnEntities();
 
 gamezone[playerPosition].classList.add('spaceship');
-
-// Border Detection
-function isBorder(array, value) {
-    var index = array.indexOf(value);
-    if (index > -1) {
-        return true
-    } else {
-        return false
-    }
-}
-
-let game = true;
-
 
 // Player Movement
 if (game == true) {
@@ -88,14 +96,14 @@ if (game == true) {
                 }
                 break;
             case "ArrowLeft":
-                if (isBorder(leftBorder, playerPosition) == false) {
+                if (!gamezone[playerPosition].getAttribute("data-left")) {
                     gamezone[playerPosition].classList.remove('spaceship');
                     playerPosition -= 1;
                     gamezone[playerPosition].classList.add('spaceship');
                 }
                 break;
             case "ArrowRight":
-                if (isBorder(rightBorder, playerPosition) == false) {
+                if (!gamezone[playerPosition].getAttribute("data-right")) {
                     gamezone[playerPosition].classList.remove('spaceship');
                     playerPosition += 1;
                     gamezone[playerPosition].classList.add('spaceship');
@@ -104,6 +112,7 @@ if (game == true) {
             case " ":
                 /*var snd = new Audio("ressources/laser.mp3");
                 snd.play();*/
+                shoot();
             default:
                 break;
         }
@@ -128,12 +137,9 @@ function moveEnemies() {
     }
 }
 
-let direction = 1
-let reverse = false;
-
-
 // Enemy Movement
 function enemyMove() {
+
     removeEnemies();
 
     if (reverse == true) {
@@ -143,11 +149,11 @@ function enemyMove() {
     }
 
     for (let i = 0; i < invaderPosition.length; i++) {
-        if (reverse == false && isBorder(rightBorder, invaderPosition[i]) == true) {
+        if (reverse == false && gamezone[playerPosition].getAttribute("data-right")) {
             reverse = true;
             direction = jumpLine;
             moveEnemies();
-        } else if (reverse == true && isBorder(leftBorder, invaderPosition[i]) == true) {
+        } else if (reverse == true && gamezone[playerPosition].getAttribute("data-left")) {
             reverse = false;
             direction = jumpLine;
             moveEnemies();
@@ -158,10 +164,15 @@ function enemyMove() {
 
     spawnEnemies();
 
-    if (gamezone[playerPosition].classList.contains('invader', 'spaceship')) {
+    if (gamezone[playerPosition].classList.contains('invader')) {
         clearInterval(enemyActive);
         game = false;
         document.getElementById("message").innerHTML = "You Lose";
+        document.getElementById("replay-popup").style.display = 'block';
+    } else if (invaderPosition.length == 0) {
+        clearInterval(enemyActive);
+        game = false;
+        document.getElementById("message").innerHTML = "You Win";
         document.getElementById("replay-popup").style.display = 'block';
     }
 }
@@ -176,6 +187,7 @@ function resetGrid() {
     spawnEnemies();
     gamezone[playerPosition].classList.add('spaceship');
     direction = 1;
+    reverse = false;
 }
 
 function play() {
@@ -189,4 +201,33 @@ if (invaderPosition.length == 0) {
     document.getElementById("message").innerHTML = "You win"
 }
 
-function moveLaser() {}
+function shoot() {
+    if (lastClick >= (Date.now() - cooldownShoot))
+        return;
+    lastClick = Date.now();
+
+    let laserPosition = playerPosition
+
+    function laserMove() {
+        gamezone[laserPosition].classList.remove('laser')
+        laserPosition -= 20
+        gamezone[laserPosition].classList.add('laser')
+
+        if (gamezone[laserPosition].classList.contains('invader')) {
+            gamezone[laserPosition].classList.remove('laser')
+            gamezone[laserPosition].classList.remove('invader')
+            gamezone[laserPosition].classList.add('explosion')
+
+            setTimeout(() => gamezone[laserPosition].classList.remove('explosion'), 100)
+            clearInterval(laser)
+
+            const index = invaderPosition.indexOf(laserPosition);
+            if (index > -1) {
+                invaderPosition.splice(index, 1);
+            }
+            console.log(invaderPosition.length)
+        }
+    }
+
+    laser = setInterval(laserMove, 100)
+}
