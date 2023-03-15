@@ -54,3 +54,19 @@ h3 {
     background-position: center;
     background-size: contain;
 }
+
+#replay-popup {
+    background-color: black;
+    text-align: center;
+    background-position: center;
+    width: 500px;
+    height: 600px;
+    position: absolute;
+    z-index: 10;
+    display: none;
+}
+
+#retry-button {
+    width: 150px;
+    height: 25px;
+}
