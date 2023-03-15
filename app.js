@@ -26,6 +26,12 @@ let invaderPosition = [
 
 let playerPosition = 170;
 
+let invaderSpeed = 500;
+
+let gridSize = 200;
+
+let jumpLine = 20;
+
 // Generate grid using number of squares needed
 function gridGen(e) {
     for (let i = 0; i < e; i++) {
@@ -34,7 +40,7 @@ function gridGen(e) {
 }
 
 
-gridGen(200);
+gridGen(gridSize);
 
 // Get all squares in the grid into array
 gamezone = Array.from(document.querySelectorAll('.grid div'));
@@ -60,94 +66,127 @@ function isBorder(array, value) {
     }
 }
 
+let game = true;
+
 
 // Player Movement
-document.addEventListener("keydown", (e) => {
-    switch (e.key) {
-        case "ArrowUp":
-            if (playerPosition - 20 >= 140) {
-                gamezone[playerPosition].classList.remove('spaceship');
-                playerPosition -= 20;
-                gamezone[playerPosition].classList.add('spaceship');
-            }
-            break;
-        case "ArrowDown":
-            if (playerPosition + 20 < 200) {
-                gamezone[playerPosition].classList.remove('spaceship');
-                playerPosition += 20;
-                gamezone[playerPosition].classList.add('spaceship');
-            }
-            break;
-        case "ArrowLeft":
-            if (isBorder(leftBorder, playerPosition) == false) {
-                gamezone[playerPosition].classList.remove('spaceship');
-                playerPosition -= 1;
-                gamezone[playerPosition].classList.add('spaceship');
-            }
-            break;
-        case "ArrowRight":
-            if (isBorder(rightBorder, playerPosition) == false) {
-                gamezone[playerPosition].classList.remove('spaceship');
-                playerPosition += 1;
-                gamezone[playerPosition].classList.add('spaceship');
-            }
-            break;
-        case " ":
-            /*var snd = new Audio("ressources/laser.mp3");
-            snd.play();*/
-        default:
-            break;
-    }
-});
+if (game == true) {
+    document.addEventListener("keydown", (e) => {
+        switch (e.key) {
+            case "ArrowUp":
+                if (playerPosition - jumpLine >= (gridSize - 60)) {
+                    gamezone[playerPosition].classList.remove('spaceship');
+                    playerPosition -= jumpLine;
+                    gamezone[playerPosition].classList.add('spaceship');
+                }
+                break;
+            case "ArrowDown":
+                if (playerPosition + jumpLine < gridSize) {
+                    gamezone[playerPosition].classList.remove('spaceship');
+                    playerPosition += jumpLine;
+                    gamezone[playerPosition].classList.add('spaceship');
+                }
+                break;
+            case "ArrowLeft":
+                if (isBorder(leftBorder, playerPosition) == false) {
+                    gamezone[playerPosition].classList.remove('spaceship');
+                    playerPosition -= 1;
+                    gamezone[playerPosition].classList.add('spaceship');
+                }
+                break;
+            case "ArrowRight":
+                if (isBorder(rightBorder, playerPosition) == false) {
+                    gamezone[playerPosition].classList.remove('spaceship');
+                    playerPosition += 1;
+                    gamezone[playerPosition].classList.add('spaceship');
+                }
+                break;
+            case " ":
+                /*var snd = new Audio("ressources/laser.mp3");
+                snd.play();*/
+            default:
+                break;
+        }
+    });
+}
 
-let reverse = false;
-
-// Enemy Movement
-function enemyMove() {
+function removeEnemies() {
     for (let i = 0; i < invaderPosition.length; i++) {
-        if (isBorder(rightBorder, invaderPosition[i]) == true) {
-            reverse = true;
-            for (let i = 0; i < invaderPosition.length; i++) {
-                gamezone[invaderPosition[i]].classList.remove('invader');
-                invaderPosition[i] += 20
-            }
-            for (let i = 0; i < invaderPosition.length; i++) {
-                gamezone[invaderPosition[i]].classList.add('invader');
-            }
-        } else if (isBorder(leftBorder, invaderPosition[i]) == true) {
-            reverse = false;
-            for (let i = 0; i < invaderPosition.length; i++) {
-                gamezone[invaderPosition[i]].classList.remove('invader');
-                invaderPosition[i] += 20
-            }
-            for (let i = 0; i < invaderPosition.length; i++) {
-                gamezone[invaderPosition[i]].classList.add('invader');
-            }
-        }
-    }
-
-    if (reverse == false) {
-        for (let i = 0; i < invaderPosition.length; i++) {
-            gamezone[invaderPosition[i]].classList.remove('invader');
-            invaderPosition[i] += 1
-        }
-        for (let i = 0; i < invaderPosition.length; i++) {
-            gamezone[invaderPosition[i]].classList.add('invader');
-        }
-
-    } else if (reverse == true) {
-        for (let i = 0; i < invaderPosition.length; i++) {
-            gamezone[invaderPosition[i]].classList.remove('invader');
-            invaderPosition[i] -= 1
-        }
-        for (let i = 0; i < invaderPosition.length; i++) {
-            gamezone[invaderPosition[i]].classList.add('invader');
-
-        }
+        gamezone[invaderPosition[i]].classList.remove('invader')
     }
 }
 
-setInterval(enemyMove, 700);
+function spawnEnemies() {
+    for (let i = 0; i < invaderPosition.length; i++) {
+        gamezone[invaderPosition[i]].classList.add('invader')
+    }
+}
 
+function moveEnemies() {
+    for (let i = 0; i < invaderPosition.length; i++) {
+        invaderPosition[i] += direction
+    }
+}
+
+let direction = 1
+let reverse = false;
+
+
+// Enemy Movement
+function enemyMove() {
+    removeEnemies();
+
+    if (reverse == true) {
+        direction = -1;
+    } else if (reverse == false) {
+        direction = 1;
+    }
+
+    for (let i = 0; i < invaderPosition.length; i++) {
+        if (reverse == false && isBorder(rightBorder, invaderPosition[i]) == true) {
+            reverse = true;
+            direction = jumpLine;
+            moveEnemies();
+        } else if (reverse == true && isBorder(leftBorder, invaderPosition[i]) == true) {
+            reverse = false;
+            direction = jumpLine;
+            moveEnemies();
+        }
+    }
+
+    moveEnemies();
+
+    spawnEnemies();
+
+    if (gamezone[playerPosition].classList.contains('invader', 'spaceship')) {
+        clearInterval(enemyActive);
+        game = false;
+        document.getElementById("message").innerHTML = "You Lose";
+        document.getElementById("replay-popup").style.display = 'block';
+    }
+}
+
+function resetGrid() {
+    gamezone[playerPosition].classList.remove('spaceship');
+    removeEnemies();
+    for (let i = 0; i < invaderDefault.length; i++) {
+        invaderPosition[i] = invaderDefault[i]
+    }
+    playerPosition = playerDefault;
+    spawnEnemies();
+    gamezone[playerPosition].classList.add('spaceship');
+    direction = 1;
+}
+
+function play() {
+    document.getElementById("replay-popup").style.display = 'none';
+    resetGrid();
+    game = true;
+    enemyActive = setInterval(enemyMove, invaderSpeed);
+}
+
+if (invaderPosition.length == 0) {
+    document.getElementById("message").innerHTML = "You win"
+}
 
 function moveLaser() {}
