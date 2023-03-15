@@ -31,14 +31,13 @@ h3 {
 }
 
 .spaceship {
-    background: url(ressources/vaisseau.png);
-    transform: rotate(180deg);
+    background: url(ressources/spaceship.png);
     background-position: center;
     background-size: contain;
 }
 
 .invader {
-    background: url(ressources/ennemies.png);
+    background: url(ressources/invader.png);
     background-position: center;
     background-size: contain;
 }

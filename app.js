@@ -32,6 +32,8 @@ let gridSize = 200;
 
 let jumpLine = 20;
 
+let cooldownShoot = 400;
+
 // Generate grid using number of squares needed
 function gridGen(e) {
     for (let i = 0; i < e; i++) {
@@ -104,6 +106,7 @@ if (game == true) {
             case " ":
                 /*var snd = new Audio("ressources/laser.mp3");
                 snd.play();*/
+                shoot();
             default:
                 break;
         }
@@ -134,6 +137,7 @@ let reverse = false;
 
 // Enemy Movement
 function enemyMove() {
+
     removeEnemies();
 
     if (reverse == true) {
@@ -158,10 +162,15 @@ function enemyMove() {
 
     spawnEnemies();
 
-    if (gamezone[playerPosition].classList.contains('invader', 'spaceship')) {
+    if (gamezone[playerPosition].classList.contains('invader')) {
         clearInterval(enemyActive);
         game = false;
         document.getElementById("message").innerHTML = "You Lose";
+        document.getElementById("replay-popup").style.display = 'block';
+    } else if (invaderPosition.length == 0) {
+        clearInterval(enemyActive);
+        game = false;
+        document.getElementById("message").innerHTML = "You Win";
         document.getElementById("replay-popup").style.display = 'block';
     }
 }
@@ -176,6 +185,7 @@ function resetGrid() {
     spawnEnemies();
     gamezone[playerPosition].classList.add('spaceship');
     direction = 1;
+    reverse = false;
 }
 
 function play() {
@@ -189,4 +199,39 @@ if (invaderPosition.length == 0) {
     document.getElementById("message").innerHTML = "You win"
 }
 
-function moveLaser() {}
+let lastClick = 0;
+
+function shoot() {
+    if (lastClick >= (Date.now() - cooldownShoot))
+        return;
+    lastClick = Date.now();
+
+    let laserPosition = playerPosition
+
+    function moveLaser() {
+        gamezone[laserPosition].classList.remove('laser')
+        laserPosition -= 20
+        gamezone[laserPosition].classList.add('laser')
+
+        if (gamezone[laserPosition].classList.contains('invader')) {
+            gamezone[laserPosition].classList.remove('laser')
+            gamezone[laserPosition].classList.remove('invader')
+            gamezone[laserPosition].classList.add('explosion')
+
+            setTimeout(() => gamezone[laserPosition].classList.remove('explosion'), 100)
+            clearInterval(laser)
+
+            const index = invaderPosition.indexOf(laserPosition);
+            if (index > -1) {
+                invaderPosition.splice(index, 1);
+            }
+            console.log(invaderPosition.length)
+
+
+
+        }
+
+    }
+
+    laser = setInterval(moveLaser, 100)
+}
