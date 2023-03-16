@@ -1,0 +1,210 @@
+@font-face {
+    font-family: 'PressStart2P';
+    src: url('ressources/PressStart2P-Regular.ttf');
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    background-image: url(ressources/planet.jpeg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    filter: blur(0.5px);
+}
+
+body {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    color: white;
+    background: none;
+    font-family: 'PressStart2P';
+    text-align: center;
+}
+
+
+h3 {
+    font-family: 'PressStart2P';
+    text-align: center;
+    margin: 20px 0;
+    color: white;
+}
+
+#easy,
+#medium,
+#hard {
+    display: none;
+}
+
+
+/* CSS */
+.button-19 {
+    appearance: button;
+    background-color: #1899D6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'PressStart2P';
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin-top: 5px;
+    outline: none;
+    overflow: visible;
+    padding: 13px 16px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 150px;
+    height: 50px;
+}
+
+.button-19:after {
+    background-clip: padding-box;
+    background-color: #1CB0F6;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.button-19:main,
+.button-19:focus {
+    user-select: auto;
+}
+
+.button-19:hover:not(:disabled) {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+}
+
+.button-19:disabled {
+    cursor: auto;
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #000;
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.5);
+    animation: background-defile 5s linear infinite;
+    border-style: solid;
+    border-color: white;
+}
+
+@keyframes background-defile {
+    from {
+        background-position-y: 0px;
+    }
+
+    to {
+        background-position-y: 256px;
+    }
+}
+
+.grid div {
+    width: 25px;
+    height: 25px;
+}
+
+.spaceship {
+    background: url(ressources/spaceship.png);
+    background-position: center;
+    background-size: contain;
+}
+
+.invader {
+    background: url(ressources/invader.png);
+    background-position: center;
+    background-size: contain;
+}
+
+.laser {
+    background: url(ressources/laser.png);
+    background-position: center;
+    background-size: contain;
+}
+
+.explosion {
+    background: url(ressources/explosion.png);
+    background-position: center;
+    background-size: contain;
+}
+
+#retry-button {
+    width: 150px;
+    height: 25px;
+    color: black;
+}
+
+.container_row {
+    display: grid;
+}
+
+#replay-popup,
+.grid {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#replay-popup {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    background: black;
+}
+
+.grid {
+    z-index: 1;
+}
+
+#home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#game,
+#username,
+#text-username,
+#submit-username {
+    display: none;
+}
+
+#username {
+    margin-bottom: 10px;
+}
+
+#text-username {
+    font-family: 'PressStart2P';
+}
