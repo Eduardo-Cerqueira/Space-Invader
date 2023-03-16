@@ -163,6 +163,13 @@ div {
     background-size: contain;
 }
 
+/*
+.bonus {
+    background: url(ressources/ammo.png);
+    background-position: center;
+    background-size: contain;
+}
+*/
 #retry-button {
     width: 150px;
     height: 25px;

@@ -6,9 +6,13 @@ const invaderDefault = [
     64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75
 ];
 
-const playerDefault = 370;
+let invaderPosition = [
+    24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+    44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
+    64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75
+];
 
-let invaderPosition = invaderDefault;
+const playerDefault = 370;
 
 let playerPosition = playerDefault;
 
@@ -106,14 +110,31 @@ if (game == true) {
                 }
                 break;
             case " ":
-                /*var snd = new Audio("ressources/laser.mp3");
-                snd.play();*/
                 shoot();
             default:
                 break;
         }
     });
 }
+/*
+let cooldownBonus = 10000;
+
+function spawnBonus() {
+    if (lastClick >= (Date.now() - cooldownBonus))
+        return;
+    lastClick = Date.now();
+
+    bonus = Math.floor(Math.random() * ((gridSize - 60) - gridSize + 1)) + gridSize;
+
+    if (bonus == playerPosition) {
+        bonus = Math.floor(Math.random() * ((gridSize - 60) - gridSize + 1)) + gridSize;
+    }
+    gamezone[bonus].classList.add('bonus')
+}
+
+if (gamezone[playerPosition].classList.contains('bonus')) {
+    cooldownShoot = cooldownShoot / 2
+}*/
 
 function spawnEnemies(array) {
     for (let i = 0; i < array.length; i++) {
@@ -132,8 +153,6 @@ function moveEnemies(array) {
         array[i] += direction
     }
 }
-
-console.log(localStorage.getItem('Game'));
 
 // Enemy Movement
 function enemyMove() {
@@ -167,6 +186,7 @@ function enemyMove() {
 
     moveEnemies(invaderPosition);
 
+    //spawnBonus();
     spawnEnemies(invaderPosition);
 
     if (gamezone[playerPosition].classList.contains('invader')) {
@@ -184,18 +204,18 @@ function enemyMove() {
     }
 }
 
-
 function resetGrid() {
+
     gamezone[playerPosition].classList.remove('spaceship');
     removeEnemies(invaderPosition);
     for (let i = 0; i < invaderDefault.length; i++) {
         invaderPosition[i] = invaderDefault[i]
-        playerPosition = playerDefault;
-        spawnEnemies(invaderPosition);
-        gamezone[playerPosition].classList.add('spaceship');
-        direction = 1;
-        reverse = false;
     }
+    playerPosition = playerDefault;
+    spawnEnemies(invaderPosition);
+    gamezone[playerPosition].classList.add('spaceship');
+    direction = 1;
+    reverse = false;
     document.getElementById("score").innerHTML = score;
 }
 
@@ -218,6 +238,7 @@ function play(difficulty) {
     enemyActive = setInterval(enemyMove, invaderSpeed);
 }
 
+
 let laserPosition = []
 let interval = false;
 let bulletSpeed = 75;
@@ -239,20 +260,20 @@ function shoot() {
         return;
     lastClick = Date.now();
 
+    var sound = new Audio("ressources/laser.mp3");
+    sound.play();
+
     laserPosition.push(playerPosition)
 
     function laserMove() {
         for (let i = 0; i < laserPosition.length; i++) {
-            console.log(laserPosition)
             if (gamezone[laserPosition[i]] != undefined) {
                 gamezone[laserPosition[i]].classList.remove('laser')
             }
 
             if ((laserPosition[i] + 20) > 20) {
-                console.log(laserPosition[i] + 20)
                 laserPosition[i] -= 20;
             } else {
-                console.log("oof")
                 laserPosition.splice(i, 1);
             }
 
@@ -278,7 +299,6 @@ function shoot() {
                     invaderPosition.splice(index, 1);
                 }
                 laserPosition.splice(i, 1);
-                console.log("invaders ", invaderPosition.length)
             }
         }
     }
@@ -298,14 +318,13 @@ function allStorage() {
         values.push(localStorage.getItem(keys[i]));
     }
 
-    console.log(values);
     return values;
 }
 
 scores = allStorage();
 
 if (scores.length > 3) {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
         document.getElementById(`best${i}`).innerHTML = scores[i]
     }
 } else {
