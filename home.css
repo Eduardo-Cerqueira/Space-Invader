@@ -134,6 +134,11 @@ h3 {
     height: 25px;
 }
 
+div {
+    background-position: center;
+    background-size: contain;
+}
+
 .spaceship {
     background: url(ressources/spaceship.png);
     background-position: center;
@@ -197,7 +202,8 @@ h3 {
 #game,
 #username,
 #text-username,
-#submit-username {
+#submit-username,
+#scores {
     display: none;
 }
 
@@ -207,4 +213,10 @@ h3 {
 
 #text-username {
     font-family: 'PressStart2P';
+}
+
+#scores {
+    display: none;
+    flex-direction: column;
+    align-items: center;
 }

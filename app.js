@@ -8,11 +8,7 @@ const invaderDefault = [
 
 const playerDefault = 370;
 
-let invaderPosition = [
-    24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-    44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
-    64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75
-];
+let invaderPosition = invaderDefault;
 
 let playerPosition = playerDefault;
 
@@ -45,22 +41,27 @@ function gridGen(e) {
 
 
     div = document.createElement('div');
+    div.setAttribute("id", "0")
     div.setAttribute("data-left", "true")
     grid.appendChild(div)
 
     for (let i = 1; i < e; i++) {
         if (i == nextLeftBorder) {
             div = document.createElement('div');
-            div.setAttribute("data-left", "true")
+            div.setAttribute("id", `${i}`)
+            div.setAttribute("data-left", "true");
             nextLeftBorder += borderSeparation
             grid.appendChild(div)
         } else if (i == nextRightBorder) {
             div = document.createElement('div');
+            div.setAttribute("id", `${i}`)
             div.setAttribute("data-right", "true")
             nextRightBorder += borderSeparation
             grid.appendChild(div)
         } else {
-            grid.appendChild(document.createElement('div'));
+            div = document.createElement('div');
+            div.setAttribute("id", `${i}`)
+            grid.appendChild(div)
         }
     }
 }
@@ -69,15 +70,6 @@ gridGen(gridSize);
 
 // Get all squares in the grid into array
 gamezone = document.querySelectorAll('.grid div');
-
-// Spawn player and ennemies
-function spawnEntities() {
-    for (let i = 0; i < invaderPosition.length; i++) {
-        gamezone[invaderPosition[i]].classList.add('invader');
-    }
-}
-
-spawnEntities();
 
 gamezone[playerPosition].classList.add('spaceship');
 
@@ -123,28 +115,30 @@ if (game == true) {
     });
 }
 
-function removeEnemies() {
-    for (let i = 0; i < invaderPosition.length; i++) {
-        gamezone[invaderPosition[i]].classList.remove('invader')
+function spawnEnemies(array) {
+    for (let i = 0; i < array.length; i++) {
+        gamezone[array[i]].classList.add('invader')
     }
 }
 
-function spawnEnemies() {
-    for (let i = 0; i < invaderPosition.length; i++) {
-        gamezone[invaderPosition[i]].classList.add('invader')
+function removeEnemies(array) {
+    for (let i = 0; i < array.length; i++) {
+        gamezone[array[i]].classList.remove('invader')
     }
 }
 
-function moveEnemies() {
-    for (let i = 0; i < invaderPosition.length; i++) {
-        invaderPosition[i] += direction
+function moveEnemies(array) {
+    for (let i = 0; i < array.length; i++) {
+        array[i] += direction
     }
 }
+
+console.log(localStorage.getItem('Game'));
 
 // Enemy Movement
 function enemyMove() {
 
-    removeEnemies();
+    removeEnemies(invaderPosition);
 
     if (reverse == true) {
         direction = -1;
@@ -154,6 +148,7 @@ function enemyMove() {
 
     for (let i = 0; i < invaderPosition.length; i++) {
         if (invaderPosition[i] > (gridSize - borderSeparation)) {
+            localStorage.setItem(Date.now(), `${username} - ${score}`);
             clearInterval(enemyActive);
             game = false;
             document.getElementById("message").innerHTML = "Game Over";
@@ -162,24 +157,26 @@ function enemyMove() {
         if (reverse == false && gamezone[invaderPosition[i]].getAttribute("data-right")) {
             reverse = true;
             direction = jumpLine;
-            moveEnemies();
+            moveEnemies(invaderPosition);
         } else if (reverse == true && gamezone[invaderPosition[i]].getAttribute("data-left")) {
             reverse = false;
             direction = jumpLine;
-            moveEnemies();
+            moveEnemies(invaderPosition);
         }
     }
 
-    moveEnemies();
+    moveEnemies(invaderPosition);
 
-    spawnEnemies();
+    spawnEnemies(invaderPosition);
 
     if (gamezone[playerPosition].classList.contains('invader')) {
+        localStorage.setItem(Date.now(), `${username} - ${score}`);
         clearInterval(enemyActive);
         game = false;
         document.getElementById("message").innerHTML = "Game Over";
         document.getElementById("replay-popup").style.display = 'flex';
     } else if (invaderPosition.length == 0) {
+        localStorage.setItem(Date.now(), `${username} - ${score}`);
         clearInterval(enemyActive);
         game = false;
         document.getElementById("message").innerHTML = "You Win";
@@ -187,17 +184,18 @@ function enemyMove() {
     }
 }
 
+
 function resetGrid() {
     gamezone[playerPosition].classList.remove('spaceship');
-    removeEnemies();
+    removeEnemies(invaderPosition);
     for (let i = 0; i < invaderDefault.length; i++) {
         invaderPosition[i] = invaderDefault[i]
+        playerPosition = playerDefault;
+        spawnEnemies(invaderPosition);
+        gamezone[playerPosition].classList.add('spaceship');
+        direction = 1;
+        reverse = false;
     }
-    playerPosition = playerDefault;
-    spawnEnemies();
-    gamezone[playerPosition].classList.add('spaceship');
-    direction = 1;
-    reverse = false;
     document.getElementById("score").innerHTML = score;
 }
 
@@ -220,19 +218,17 @@ function play(difficulty) {
     enemyActive = setInterval(enemyMove, invaderSpeed);
 }
 
-if (invaderPosition.length == 0) {
-    document.getElementById("message").innerHTML = "You win"
-}
-
 let laserPosition = []
 let interval = false;
 let bulletSpeed = 75;
-let explosion = null;
+let explosion = [];
 
 function clearExplosion() {
-    if (explosion != null) {
-        gamezone[explosion].classList.remove('explosion');
-        explosion = null;
+    if (explosion.length != 0) {
+        for (let i = 0; i < laserPosition.length; i++) {
+            gamezone[explosion].classList.remove('explosion');
+            explosion.splice(i, 1);
+        }
     }
 }
 
@@ -292,6 +288,31 @@ function shoot() {
     interval = true;
 }
 
+function allStorage() {
+
+    var values = [],
+        keys = Object.keys(localStorage),
+        i = keys.length;
+
+    while (i--) {
+        values.push(localStorage.getItem(keys[i]));
+    }
+
+    console.log(values);
+    return values;
+}
+
+scores = allStorage();
+
+if (scores.length > 3) {
+    for (let i = 0; i < 2; i++) {
+        document.getElementById(`best${i}`).innerHTML = scores[i]
+    }
+} else {
+    for (let i = 0; i < scores.length; i++) {
+        document.getElementById(`best${i}`).innerHTML = scores[i]
+    }
+}
 
 function chooseDifficulty() {
     username = document.getElementById("username").value;
@@ -309,4 +330,16 @@ function chooseUsername() {
     document.getElementById("username").style.display = 'block';
     document.getElementById("text-username").style.display = 'block';
 
+}
+
+function showScores() {
+    document.getElementById("button-play").style.display = 'none';
+    document.getElementById("button-score").style.display = 'none';
+    document.getElementById("scores").style.display = 'flex';
+}
+
+function backHome() {
+    document.getElementById("scores").style.display = 'none';
+    document.getElementById("button-play").style.display = 'block';
+    document.getElementById("button-score").style.display = 'block';
 }

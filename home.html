@@ -11,7 +11,15 @@
 <body>
     <div id="home">
         <h1>Space Invaders</h1>
-        <a id="button-play" onclick=chooseUsername()><button class="button-19" role="button">Jouer</button></a>
+        <button id="button-play" class="button-19" role="button" onclick=chooseUsername()>Jouer</button>
+        <button id="button-score" class="button-19" role="button" onclick=showScores()>Scores</button>
+        <div id="scores">
+            <h3 id="title-score">Top Scores</h3>
+            <h3 id="best0"></h3>
+            <h3 id="best1"></h3>
+            <h3 id="best2"></h3>
+            <button id="back" class="button-19" role="button" onclick=backHome()>Back</button>
+        </div>
         <h3 id="text-username">Your Username :</h3>
         <input id="username" type="text" maxlength="20" />
         <button id="submit-username" class="button-19" role="button" onclick=chooseDifficulty()>Submit</button>
