@@ -16,7 +16,7 @@ let invaderPosition = [
 
 let playerPosition = playerDefault;
 
-let invaderSpeed = 500;
+//let invaderSpeed = 400;
 
 let gridSize = 400;
 
@@ -33,6 +33,8 @@ let direction = 1
 let reverse = false;
 
 let lastClick = 0;
+
+let score = 0;
 
 // Generate grid using number of squares needed
 function gridGen(e) {
@@ -149,11 +151,17 @@ function enemyMove() {
     }
 
     for (let i = 0; i < invaderPosition.length; i++) {
-        if (reverse == false && gamezone[playerPosition].getAttribute("data-right")) {
+        if (invaderPosition[i] > (gridSize - borderSeparation)) {
+            clearInterval(enemyActive);
+            game = false;
+            document.getElementById("message").innerHTML = "Game Over";
+            document.getElementById("replay-popup").style.display = 'flex';
+        }
+        if (reverse == false && gamezone[invaderPosition[i]].getAttribute("data-right")) {
             reverse = true;
             direction = jumpLine;
             moveEnemies();
-        } else if (reverse == true && gamezone[playerPosition].getAttribute("data-left")) {
+        } else if (reverse == true && gamezone[invaderPosition[i]].getAttribute("data-left")) {
             reverse = false;
             direction = jumpLine;
             moveEnemies();
@@ -167,13 +175,13 @@ function enemyMove() {
     if (gamezone[playerPosition].classList.contains('invader')) {
         clearInterval(enemyActive);
         game = false;
-        document.getElementById("message").innerHTML = "You Lose";
-        document.getElementById("replay-popup").style.display = 'block';
+        document.getElementById("message").innerHTML = "Game Over";
+        document.getElementById("replay-popup").style.display = 'flex';
     } else if (invaderPosition.length == 0) {
         clearInterval(enemyActive);
         game = false;
         document.getElementById("message").innerHTML = "You Win";
-        document.getElementById("replay-popup").style.display = 'block';
+        document.getElementById("replay-popup").style.display = 'flex';
     }
 }
 
@@ -190,7 +198,10 @@ function resetGrid() {
     reverse = false;
 }
 
-function play() {
+function play(invaderSpeed) {
+    document.getElementById("home").style.display = "none"
+    document.getElementById("game").style.display = "block"
+    document.getElementById("message").innerHTML = "";
     document.getElementById("replay-popup").style.display = 'none';
     resetGrid();
     game = true;
@@ -221,6 +232,10 @@ function shoot() {
             setTimeout(() => gamezone[laserPosition].classList.remove('explosion'), 100)
             clearInterval(laser)
 
+            score += 1;
+
+            document.getElementById("score").innerHTML = score;
+
             const index = invaderPosition.indexOf(laserPosition);
             if (index > -1) {
                 invaderPosition.splice(index, 1);
@@ -230,4 +245,11 @@ function shoot() {
     }
 
     laser = setInterval(laserMove, 100)
+}
+
+function chooseDifficulty() {
+    document.getElementById("button-play").style.display = 'none';
+    document.getElementById("easy").style.display = 'block';
+    document.getElementById("medium").style.display = 'block';
+    document.getElementById("hard").style.display = 'block';
 }
