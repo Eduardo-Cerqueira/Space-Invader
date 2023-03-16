@@ -70,7 +70,7 @@ gridGen(gridSize);
 // Get all squares in the grid into array
 gamezone = document.querySelectorAll('.grid div');
 
-// Spawn player and ennemies
+// Spawn ennemies
 function spawnEntities() {
     for (let i = 0; i < invaderPosition.length; i++) {
         gamezone[invaderPosition[i]].classList.add('invader');
