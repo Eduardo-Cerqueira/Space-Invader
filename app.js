@@ -227,12 +227,14 @@ if (invaderPosition.length == 0) {
 let laserPosition = []
 let interval = false;
 let bulletSpeed = 75;
-let explosion = null;
+let explosion = [];
 
 function clearExplosion() {
-    if (explosion != null) {
-        gamezone[explosion].classList.remove('explosion');
-        explosion = null;
+    if (explosion.length != 0) {
+        for (let i = 0; i < laserPosition.length; i++) {
+            gamezone[explosion].classList.remove('explosion');
+            explosion.splice(i, 1);
+        }
     }
 }
 
