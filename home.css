@@ -163,6 +163,13 @@ div {
     background-size: contain;
 }
 
+/*
+.bonus {
+    background: url(ressources/ammo.png);
+    background-position: center;
+    background-size: contain;
+}
+*/
 #retry-button {
     width: 150px;
     height: 25px;
@@ -219,4 +226,9 @@ div {
     display: none;
     flex-direction: column;
     align-items: center;
+}
+
+.form-username {
+    font-family: 'PressStart2P';
+    text-align: center;
 }
