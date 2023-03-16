@@ -194,6 +194,17 @@ h3 {
     align-items: center;
 }
 
-#game {
+#game,
+#username,
+#text-username,
+#submit-username {
     display: none;
+}
+
+#username {
+    margin-bottom: 10px;
+}
+
+#text-username {
+    font-family: 'PressStart2P';
 }

@@ -11,7 +11,10 @@
 <body>
     <div id="home">
         <h1>Space Invaders</h1>
-        <a id="button-play" onclick=chooseDifficulty()><button class="button-19" role="button">Jouer</button></a>
+        <a id="button-play" onclick=chooseUsername()><button class="button-19" role="button">Jouer</button></a>
+        <h3 id="text-username">Your Username :</h3>
+        <input id="username" type="text" maxlength="20" />
+        <button id="submit-username" class="button-19" role="button" onclick=chooseDifficulty()>Submit</button>
         <button id="easy" class="button-19" role="button" onclick=play(600)>Easy</button>
         <button id="medium" class="button-19" role="button" onclick=play(400)>Medium</button>
         <button id="hard" class="button-19" role="button" onclick=play(200)>Hard</button>

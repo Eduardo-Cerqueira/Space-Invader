@@ -36,6 +36,8 @@ let lastClick = 0;
 
 let score = 0;
 
+let username;
+
 // Generate grid using number of squares needed
 function gridGen(e) {
     let nextLeftBorder = borderSeparation;
@@ -248,8 +250,19 @@ function shoot() {
 }
 
 function chooseDifficulty() {
-    document.getElementById("button-play").style.display = 'none';
+    username = document.getElementById("username").value;
+    document.getElementById("username").style.display = 'none';
+    document.getElementById("text-username").style.display = 'none';
+    document.getElementById("submit-username").style.display = 'none';
     document.getElementById("easy").style.display = 'block';
     document.getElementById("medium").style.display = 'block';
     document.getElementById("hard").style.display = 'block';
+}
+
+function chooseUsername() {
+    document.getElementById("button-play").style.display = 'none';
+    document.getElementById("submit-username").style.display = 'block';
+    document.getElementById("username").style.display = 'block';
+    document.getElementById("text-username").style.display = 'block';
+
 }
