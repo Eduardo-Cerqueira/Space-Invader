@@ -326,6 +326,7 @@ function chooseDifficulty() {
 
 function chooseUsername() {
     document.getElementById("button-play").style.display = 'none';
+    document.getElementById("button-score").style.display = 'none';
     document.getElementById("submit-username").style.display = 'block';
     document.getElementById("username").style.display = 'block';
     document.getElementById("text-username").style.display = 'block';
