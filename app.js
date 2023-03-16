@@ -16,7 +16,7 @@ let invaderPosition = [
 
 let playerPosition = playerDefault;
 
-//let invaderSpeed = 400;
+let invaderSpeed;
 
 let gridSize = 400;
 
@@ -198,15 +198,25 @@ function resetGrid() {
     gamezone[playerPosition].classList.add('spaceship');
     direction = 1;
     reverse = false;
+    document.getElementById("score").innerHTML = score;
 }
 
-function play(invaderSpeed) {
+function play(difficulty) {
     document.getElementById("home").style.display = "none"
     document.getElementById("game").style.display = "block"
     document.getElementById("message").innerHTML = "";
     document.getElementById("replay-popup").style.display = 'none';
     resetGrid();
     game = true;
+
+    if (difficulty == 1) {
+        invaderSpeed = 600
+    } else if (difficulty == 2) {
+        invaderSpeed = 400
+    } else if (difficulty == 3) {
+        invaderSpeed = 200
+    }
+
     enemyActive = setInterval(enemyMove, invaderSpeed);
 }
 
@@ -214,40 +224,74 @@ if (invaderPosition.length == 0) {
     document.getElementById("message").innerHTML = "You win"
 }
 
+let laserPosition = []
+let interval = false;
+let bulletSpeed = 75;
+let explosion = null;
+
+function clearExplosion() {
+    if (explosion != null) {
+        gamezone[explosion].classList.remove('explosion');
+        explosion = null;
+    }
+}
+
+explosionClear = setInterval(clearExplosion, 200)
+
 function shoot() {
     if (lastClick >= (Date.now() - cooldownShoot))
         return;
     lastClick = Date.now();
 
-    let laserPosition = playerPosition
+    laserPosition.push(playerPosition)
 
     function laserMove() {
-        gamezone[laserPosition].classList.remove('laser')
-        laserPosition -= 20
-        gamezone[laserPosition].classList.add('laser')
-
-        if (gamezone[laserPosition].classList.contains('invader')) {
-            gamezone[laserPosition].classList.remove('laser')
-            gamezone[laserPosition].classList.remove('invader')
-            gamezone[laserPosition].classList.add('explosion')
-
-            setTimeout(() => gamezone[laserPosition].classList.remove('explosion'), 100)
-            clearInterval(laser)
-
-            score += 1;
-
-            document.getElementById("score").innerHTML = score;
-
-            const index = invaderPosition.indexOf(laserPosition);
-            if (index > -1) {
-                invaderPosition.splice(index, 1);
+        for (let i = 0; i < laserPosition.length; i++) {
+            console.log(laserPosition)
+            if (gamezone[laserPosition[i]] != undefined) {
+                gamezone[laserPosition[i]].classList.remove('laser')
             }
-            console.log(invaderPosition.length)
+
+            if ((laserPosition[i] + 20) > 20) {
+                console.log(laserPosition[i] + 20)
+                laserPosition[i] -= 20;
+            } else {
+                console.log("oof")
+                laserPosition.splice(i, 1);
+            }
+
+            if (gamezone[laserPosition[i]] == undefined) {
+                return;
+            }
+            gamezone[laserPosition[i]].classList.add('laser')
+
+            if (gamezone[laserPosition[i]].classList.contains('invader')) {
+                gamezone[laserPosition[i]].classList.remove('laser')
+                gamezone[laserPosition[i]].classList.remove('invader')
+                gamezone[laserPosition[i]].classList.add('explosion')
+
+
+                explosion = laserPosition[i];
+
+                score += 1;
+
+                document.getElementById("score").innerHTML = score;
+
+                const index = invaderPosition.indexOf(laserPosition[i]);
+                if (index > -1) {
+                    invaderPosition.splice(index, 1);
+                }
+                laserPosition.splice(i, 1);
+                console.log("invaders ", invaderPosition.length)
+            }
         }
     }
-
-    laser = setInterval(laserMove, 100)
+    if (interval == false) {
+        laser = setInterval(laserMove, bulletSpeed)
+    }
+    interval = true;
 }
+
 
 function chooseDifficulty() {
     username = document.getElementById("username").value;
