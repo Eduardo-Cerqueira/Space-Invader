@@ -192,7 +192,8 @@ div {
     justify-content: center;
     align-items: center;
     z-index: 2;
-    background: black;
+    background: url("ressources/galaxy.png");
+    background-size: cover;
 }
 
 .grid {

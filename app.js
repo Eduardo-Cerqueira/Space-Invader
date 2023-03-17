@@ -42,7 +42,7 @@ let score = 0;
 
 let username;
 
-let volume = 0.5;
+let volume = 0.1;
 
 // Generate grid using number of squares needed
 function gridGen(e) {
