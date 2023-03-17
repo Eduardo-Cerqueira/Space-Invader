@@ -211,6 +211,7 @@ function enemyMove() {
 }
 
 function resetGrid() {
+
     gamezone[playerPosition].classList.remove('spaceship');
     removeEnemies(invaderPosition);
     for (let i = 0; i < invaderDefault.length; i++) {
