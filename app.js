@@ -1,3 +1,7 @@
+var musicMenu = new Audio("ressources/menu.mp3");
+var musicGame = new Audio("ressources/music_game.mp3")
+var musicTest = new Audio("ressources/test_audio.mp3")
+
 const grid = document.querySelector('.grid');
 
 const invaderDefault = [
@@ -37,6 +41,8 @@ let lastClick = 0;
 let score = 0;
 
 let username;
+
+let volume = 0.1;
 
 // Generate grid using number of squares needed
 function gridGen(e) {
@@ -235,6 +241,11 @@ function play(difficulty) {
         invaderSpeed = 200
     }
 
+    musicMenu.pause();
+
+    musicGame.play();
+    musicGame.volume = volume / 2
+
     enemyActive = setInterval(enemyMove, invaderSpeed);
 }
 
@@ -261,6 +272,7 @@ function shoot() {
     lastClick = Date.now();
 
     var sound = new Audio("ressources/laser.mp3");
+    sound.volume = volume;
     sound.play();
 
     laserPosition.push(playerPosition)
@@ -344,8 +356,12 @@ function chooseDifficulty() {
 }
 
 function chooseUsername() {
+    musicMenu.play();
+    musicMenu.volume = volume
+    musicMenu.loop = true;
     document.getElementById("button-play").style.display = 'none';
     document.getElementById("button-score").style.display = 'none';
+    document.getElementById("button-settings").style.display = 'none';
     document.getElementById("submit-username").style.display = 'block';
     document.getElementById("username").style.display = 'block';
     document.getElementById("text-username").style.display = 'block';
@@ -355,11 +371,32 @@ function chooseUsername() {
 function showScores() {
     document.getElementById("button-play").style.display = 'none';
     document.getElementById("button-score").style.display = 'none';
+    document.getElementById("button-settings").style.display = 'none';
     document.getElementById("scores").style.display = 'flex';
 }
 
 function backHome() {
     document.getElementById("scores").style.display = 'none';
+    document.getElementById("settings").style.display = 'none';
     document.getElementById("button-play").style.display = 'block';
     document.getElementById("button-score").style.display = 'block';
+    document.getElementById("button-settings").style.display = 'block';
+}
+
+function showSettings() {
+    document.getElementById("button-play").style.display = 'none';
+    document.getElementById("button-score").style.display = 'none';
+    document.getElementById("button-settings").style.display = 'none';
+    document.getElementById("settings").style.display = 'flex';
+}
+
+function testVolume() {
+    musicTest.play();
+    musicTest.volume = volume
+}
+
+function setupVolume() {
+    volume = document.getElementById('volumeSlider').value
+    document.getElementById('volume').innerHTML = `${volume}%`
+    volume /= 100
 }

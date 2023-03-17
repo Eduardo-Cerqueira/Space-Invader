@@ -13,6 +13,15 @@
         <h1>Space Invaders</h1>
         <button id="button-play" class="button-19" role="button" onclick=chooseUsername()>Jouer</button>
         <button id="button-score" class="button-19" role="button" onclick=showScores()>Scores</button>
+        <button id="button-settings" class="button-19" role="button" onclick=showSettings()>Settings</button>
+        <div id="settings">
+            <input type="image" src="ressources/play.png" id="test" onclick=testVolume() />
+            <h3>Music</h3>
+            <input id="volumeSlider" type='range' min="0" max="100">
+            <h3 id="volume"></h3>
+            <button id="validate-volume" class="button-19" role="button" onclick=setupVolume()>Valider</button>
+            <button id="back" class="button-19" role="button" onclick=backHome()>Back</button>
+        </div>
         <div id="scores">
             <h3 id="title-score">Top Scores</h3>
             <h3 id="best0"></h3>
