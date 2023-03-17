@@ -1,3 +1,6 @@
+var musicMenu = new Audio("ressources/menu.mp3");
+var musicGame = new Audio("ressources/music_game.mp3")
+
 const grid = document.querySelector('.grid');
 
 const invaderDefault = [
@@ -235,6 +238,10 @@ function play(difficulty) {
         invaderSpeed = 200
     }
 
+    musicMenu.pause();
+
+    musicGame.play();
+
     enemyActive = setInterval(enemyMove, invaderSpeed);
 }
 
@@ -344,6 +351,8 @@ function chooseDifficulty() {
 }
 
 function chooseUsername() {
+    musicMenu.play();
+    musicMenu.loop = true;
     document.getElementById("button-play").style.display = 'none';
     document.getElementById("button-score").style.display = 'none';
     document.getElementById("submit-username").style.display = 'block';
