@@ -222,6 +222,7 @@ function resetGrid() {
     gamezone[playerPosition].classList.add('spaceship');
     direction = 1;
     reverse = false;
+    score = 0;
     document.getElementById("score").innerHTML = score;
 }
 
@@ -247,6 +248,8 @@ function play(difficulty) {
     musicGame.volume = volume / 2
 
     enemyActive = setInterval(enemyMove, invaderSpeed);
+
+    Shotenemies = setInterval(enemiesShoot, 800)
 }
 
 
@@ -399,4 +402,60 @@ function setupVolume() {
     volume = document.getElementById('volumeSlider').value
     document.getElementById('volume').innerHTML = `${volume}%`
     volume /= 100
+}
+
+let laserPositionEnemy = []
+let intervalEnemy = false;
+let bulletSpeedEnemy = 75;
+
+
+function enemiesShoot() {
+
+    var sound = new Audio("ressources/laser.mp3");
+    sound.volume = volume;
+    sound.play();
+
+    laserPositionEnemy.push(invaderPosition[invaderPosition.length - 1])
+
+    function laserMoveEnemy() {
+        console.log(laserPositionEnemy)
+        for (let i = 0; i < laserPositionEnemy.length; i++) {
+            if (gamezone[laserPositionEnemy[i]] != undefined) {
+                gamezone[laserPositionEnemy[i]].classList.remove('laserEnemy')
+            }
+
+            if ((laserPositionEnemy[i] + borderSeparation) < gridSize) {
+                laserPositionEnemy[i] += 20;
+            } else {
+                laserPositionEnemy.splice(i, 1);
+            }
+
+            if (gamezone[laserPositionEnemy[i]] == undefined) {
+                return;
+            }
+            gamezone[laserPositionEnemy[i]].classList.add('laserEnemy')
+
+            if (gamezone[laserPositionEnemy[i]].classList.contains('spaceship')) {
+                gamezone[laserPositionEnemy[i]].classList.remove('laserEnemy')
+                gamezone[laserPositionEnemy[i]].classList.remove('spaceship')
+                gamezone[laserPositionEnemy[i]].classList.add('explosion')
+
+
+                explosion = laserPositionEnemy[i];
+
+                laserPositionEnemy.splice(i, 1);
+
+                localStorage.setItem(Date.now(), `${username} - ${score}`);
+                clearInterval(enemyActive);
+                clearInterval(enemiesShoot);
+                game = false;
+                document.getElementById("message").innerHTML = "Game Over";
+                document.getElementById("replay-popup").style.display = 'flex';
+            }
+        }
+    }
+    if (intervalEnemy == false) {
+        laserEnemy = setInterval(laserMoveEnemy, bulletSpeedEnemy)
+    }
+    intervalEnemy = true;
 }

@@ -149,6 +149,7 @@ div {
     background: url(ressources/invader.png);
     background-position: center;
     background-size: contain;
+    filter: invert();
 }
 
 .laser {
@@ -159,6 +160,12 @@ div {
 
 .explosion {
     background: url(ressources/explosion.png);
+    background-position: center;
+    background-size: contain;
+}
+
+.laserEnemy {
+    background: url(ressources/laser.png);
     background-position: center;
     background-size: contain;
 }
