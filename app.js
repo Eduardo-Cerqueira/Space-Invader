@@ -222,6 +222,7 @@ function resetGrid() {
     gamezone[playerPosition].classList.add('spaceship');
     direction = 1;
     reverse = false;
+    score = 0;
     document.getElementById("score").innerHTML = score;
 }
 
