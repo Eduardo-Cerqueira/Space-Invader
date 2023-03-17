@@ -210,7 +210,8 @@ div {
 #username,
 #text-username,
 #submit-username,
-#scores {
+#scores,
+#settings {
     display: none;
 }
 
@@ -222,7 +223,8 @@ div {
     font-family: 'PressStart2P';
 }
 
-#scores {
+#scores,
+#settings {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -231,4 +233,9 @@ div {
 .form-username {
     font-family: 'PressStart2P';
     text-align: center;
+}
+
+#test {
+    width: 50px;
+    filter: invert();
 }
