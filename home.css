@@ -164,6 +164,12 @@ div {
     background-size: contain;
 }
 
+.laserEnemy {
+    background: url(ressources/laser.png);
+    background-position: center;
+    background-size: contain;
+}
+
 /*
 .bonus {
     background: url(ressources/ammo.png);
