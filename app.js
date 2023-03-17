@@ -244,7 +244,7 @@ function play(difficulty) {
     musicMenu.pause();
 
     musicGame.play();
-    musicGame.volume = volume
+    musicGame.volume = volume / 2
 
     enemyActive = setInterval(enemyMove, invaderSpeed);
 }
