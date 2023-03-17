@@ -149,6 +149,7 @@ div {
     background: url(ressources/invader.png);
     background-position: center;
     background-size: contain;
+    filter: invert();
 }
 
 .laser {
